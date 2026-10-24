@@ -1,5 +1,12 @@
 //TODO реализовать DTO для /orders
-import { IsArray, IsEmail, IsNumber, IsString, IsUUID, ValidateNested } from 'class-validator';
+import {
+  IsArray,
+  IsEmail,
+  IsNumber,
+  IsString,
+  IsUUID,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class TicketDto {

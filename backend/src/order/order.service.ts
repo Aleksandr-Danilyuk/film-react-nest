@@ -1,7 +1,17 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException} from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { v4 as uuid } from 'uuid';
 import { FilmsRepository } from '../films/films.repository';
-import { CreateOrderDto, OrderedTicketDto, OrderResponse, TicketDto } from './dto/order.dto';
+import {
+  CreateOrderDto,
+  OrderedTicketDto,
+  OrderResponse,
+  TicketDto,
+} from './dto/order.dto';
 
 @Injectable()
 export class OrderService {
@@ -39,9 +49,15 @@ export class OrderService {
 
     const seat = `${ticket.row}:${ticket.seat}`;
     if (session.taken.includes(seat)) {
-      throw new ConflictException(`Место ${seat} на сеансе ${ticket.session} уже занято`);
+      throw new ConflictException(
+        `Место ${seat} на сеансе ${ticket.session} уже занято`,
+      );
     }
 
-    await this.filmsRepository.addTaken(ticket.session, ticket.row, ticket.seat);
+    await this.filmsRepository.addTaken(
+      ticket.session,
+      ticket.row,
+      ticket.seat,
+    );
   }
 }

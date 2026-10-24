@@ -5,7 +5,9 @@ import { Film, FilmDocument } from './schemas/film.schema';
 
 @Injectable()
 export class FilmsRepository {
-  constructor(@InjectModel(Film.name) private readonly filmModel: Model<FilmDocument>) {}
+  constructor(
+    @InjectModel(Film.name) private readonly filmModel: Model<FilmDocument>,
+  ) {}
 
   async getFilms(): Promise<FilmDocument[]> {
     return this.filmModel.find().exec();

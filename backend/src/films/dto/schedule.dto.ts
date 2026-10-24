@@ -7,7 +7,7 @@ export class ScheduleDto {
   rows: number;
   seats: number;
   price: number;
-  taken: string[]; 
+  taken: string[];
 }
 
 export class ScheduleListResponse {

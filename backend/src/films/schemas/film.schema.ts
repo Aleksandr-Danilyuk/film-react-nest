@@ -21,7 +21,7 @@ export class Schedule {
   @Prop({ required: true })
   price: number;
 
-  @Prop({ type: [String], default: [] }) 
+  @Prop({ type: [String], default: [] })
   taken: string[];
 }
 

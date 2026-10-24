@@ -33,7 +33,9 @@ export function toScheduleDto(schedule): ScheduleDto {
   };
 }
 
-export function toScheduleListResponse(film: FilmDocument): ScheduleListResponse {
+export function toScheduleListResponse(
+  film: FilmDocument,
+): ScheduleListResponse {
   const items = (film?.schedule ?? []).map(toScheduleDto);
   return { total: items.length, items };
 }
