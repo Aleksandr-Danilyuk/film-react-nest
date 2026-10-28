@@ -4,7 +4,6 @@ export const configProvider = {
   imports: [ConfigModule.forRoot()],
   provide: 'CONFIG',
   useValue: <AppConfig>{
-    //TODO прочесть переменнные среды
   },
 };
 

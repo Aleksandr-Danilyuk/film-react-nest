@@ -4,7 +4,7 @@ import {
   NestModule,
   RequestMethod,
 } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import * as path from 'node:path';
 import * as express from 'express';
 
