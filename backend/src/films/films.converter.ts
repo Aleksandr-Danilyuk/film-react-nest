@@ -1,13 +1,14 @@
-import { FilmDocument } from './schemas/film.schema';
+import { Film } from './entities/film.entity';
+import { Schedule } from './entities/schedule.entity';
 import { FilmDto, FilmsListResponse } from './dto/films.dto';
 import { ScheduleDto, ScheduleListResponse } from './dto/schedule.dto';
 
-export function toFilmDto(film: FilmDocument): FilmDto {
+export function toFilmDto(film: Film): FilmDto {
   return {
     id: film.id,
     rating: film.rating,
     director: film.director,
-    tags: film.tags,
+    tags: film.tags ? film.tags.split(',') : [],
     title: film.title,
     about: film.about,
     description: film.description,
@@ -16,12 +17,12 @@ export function toFilmDto(film: FilmDocument): FilmDto {
   };
 }
 
-export function toFilmsListResponse(films: FilmDocument[]): FilmsListResponse {
+export function toFilmsListResponse(films: Film[]): FilmsListResponse {
   const items = films.map(toFilmDto);
   return { total: items.length, items };
 }
 
-export function toScheduleDto(schedule): ScheduleDto {
+export function toScheduleDto(schedule: Schedule): ScheduleDto {
   return {
     id: schedule.id,
     daytime: schedule.daytime,
@@ -29,12 +30,12 @@ export function toScheduleDto(schedule): ScheduleDto {
     rows: schedule.rows,
     seats: schedule.seats,
     price: schedule.price,
-    taken: schedule.taken,
+    taken: schedule.taken ? schedule.taken.split(',') : [],
   };
 }
 
 export function toScheduleListResponse(
-  film: FilmDocument,
+  film: Film,
 ): ScheduleListResponse {
   const items = (film?.schedule ?? []).map(toScheduleDto);
   return { total: items.length, items };

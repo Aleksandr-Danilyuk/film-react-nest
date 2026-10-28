@@ -1,32 +1,54 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { Film, FilmDocument } from './schemas/film.schema';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Film } from './entities/film.entity';
+import { Schedule } from './entities/schedule.entity';
+
+type ScheduleView = Omit<Schedule, 'taken'> & { taken: string[] };
+type FilmView = Omit<Film, 'schedule'> & { schedule: ScheduleView[] };
 
 @Injectable()
 export class FilmsRepository {
   constructor(
-    @InjectModel(Film.name) private readonly filmModel: Model<FilmDocument>,
+    @InjectRepository(Film)
+    private readonly filmsRepo: Repository<Film>,
+    @InjectRepository(Schedule)
+    private readonly schedulesRepo: Repository<Schedule>,
   ) {}
 
-  async getFilms(): Promise<FilmDocument[]> {
-    return this.filmModel.find().exec();
+  async getFilms(): Promise<Film[]> {
+    return this.filmsRepo.find();
   }
 
-  async getScheduleByFilm(filmId: string): Promise<FilmDocument | null> {
-    return this.filmModel.findOne({ id: filmId }).exec();
+  async getScheduleByFilm(filmId: string): Promise<Film | null> {
+    return this.filmsRepo.findOne({
+      where: { id: filmId },
+      relations: { schedule: true },
+    });
   }
 
-  async findFilmBySession(sessionId: string): Promise<FilmDocument | null> {
-    return this.filmModel.findOne({ 'schedule.id': sessionId }).exec();
+  async findFilmBySession(sessionId: string): Promise<FilmView | null> {
+    const film = await this.filmsRepo.findOne({
+      where: { schedule: { id: sessionId } },
+      relations: { schedule: true },
+    });
+    if (!film) return null;
+
+    return {
+      ...film,
+      schedule: film.schedule.map((s) => ({
+        ...s,
+        taken: s.taken ? s.taken.split(',') : [],
+      })),
+    };
   }
 
   async addTaken(sessionId: string, row: number, seat: number): Promise<void> {
-    await this.filmModel
-      .updateOne(
-        { 'schedule.id': sessionId },
-        { $push: { 'schedule.$.taken': `${row}:${seat}` } },
-      )
-      .exec();
+    await this.schedulesRepo.query(
+      `UPDATE schedules
+         SET taken = CASE WHEN taken = '' THEN $1 ELSE taken || ',' || $1 END
+       WHERE id = $2`,
+      [`${row}:${seat}`, sessionId],
+    );
   }
 }
