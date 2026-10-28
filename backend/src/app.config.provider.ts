@@ -3,8 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 export const configProvider = {
   imports: [ConfigModule.forRoot()],
   provide: 'CONFIG',
-  useValue: <AppConfig>{
-  },
+  useValue: <AppConfig>{},
 };
 
 export interface AppConfig {

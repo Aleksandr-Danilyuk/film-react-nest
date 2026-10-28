@@ -5,7 +5,7 @@ import { FilmsService } from './films.service';
 import { FilmsRepository } from './films.repository';
 
 @Module({
-  imports: [DatabaseModule], 
+  imports: [DatabaseModule],
   controllers: [FilmsController],
   providers: [FilmsService, FilmsRepository],
   exports: [FilmsRepository],
