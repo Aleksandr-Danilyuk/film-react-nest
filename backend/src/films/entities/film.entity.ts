@@ -12,8 +12,8 @@ export class Film {
   @Column('varchar')
   director: string;
 
-  @Column('text')
-  tags: string;
+  @Column('simple-array')
+  tags: string[];
 
   @Column('varchar')
   title: string;

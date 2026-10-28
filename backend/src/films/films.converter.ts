@@ -8,7 +8,7 @@ export function toFilmDto(film: Film): FilmDto {
     id: film.id,
     rating: film.rating,
     director: film.director,
-    tags: film.tags ? film.tags.split(',') : [],
+    tags: film.tags,
     title: film.title,
     about: film.about,
     description: film.description,
@@ -30,7 +30,7 @@ export function toScheduleDto(schedule: Schedule): ScheduleDto {
     rows: schedule.rows,
     seats: schedule.seats,
     price: schedule.price,
-    taken: schedule.taken ? schedule.taken.split(',') : [],
+    taken: schedule.taken,
   };
 }
 

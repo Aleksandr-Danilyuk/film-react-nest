@@ -4,8 +4,6 @@ import { Repository } from 'typeorm';
 import { Film } from './entities/film.entity';
 import { Schedule } from './entities/schedule.entity';
 
-type ScheduleView = Omit<Schedule, 'taken'> & { taken: string[] };
-type FilmView = Omit<Film, 'schedule'> & { schedule: ScheduleView[] };
 
 @Injectable()
 export class FilmsRepository {
@@ -27,28 +25,18 @@ export class FilmsRepository {
     });
   }
 
-  async findFilmBySession(sessionId: string): Promise<FilmView | null> {
-    const film = await this.filmsRepo.findOne({
+  async findFilmBySession(sessionId: string): Promise<Film | null> {
+    return this.filmsRepo.findOne({
       where: { schedule: { id: sessionId } },
       relations: { schedule: true },
     });
-    if (!film) return null;
-
-    return {
-      ...film,
-      schedule: film.schedule.map((s) => ({
-        ...s,
-        taken: s.taken ? s.taken.split(',') : [],
-      })),
-    };
   }
 
   async addTaken(sessionId: string, row: number, seat: number): Promise<void> {
-    await this.schedulesRepo.query(
-      `UPDATE schedules
-         SET taken = CASE WHEN taken = '' THEN $1 ELSE taken || ',' || $1 END
-       WHERE id = $2`,
-      [`${row}:${seat}`, sessionId],
-    );
+    const schedule = await this.schedulesRepo.findOneBy({ id: sessionId });
+    if (!schedule) return;
+
+    schedule.taken.push(`${row}:${seat}`);
+    await this.schedulesRepo.save(schedule);
   }
 }
