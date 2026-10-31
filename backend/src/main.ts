@@ -1,10 +1,25 @@
-import { ValidationPipe, RequestMethod } from '@nestjs/common';
+import { ValidationPipe, RequestMethod, LoggerService } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { DevLogger } from './logger/dev.logger';
+import { JsonLogger } from './logger/json.logger';
+import { TskvLogger } from './logger/tskv.logger';
 import 'dotenv/config';
 
+function createLogger(): LoggerService {
+  switch (process.env.LOGGER) {
+    case 'json':
+      return new JsonLogger();
+    case 'tskv':
+      return new TskvLogger();
+    default:
+      return new DevLogger();
+  }
+}
+
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const logger = createLogger();
+  const app = await NestFactory.create(AppModule, { logger });
   //app.setGlobalPrefix("api/afisha");
   app.setGlobalPrefix('api/afisha', {
     // исключаем статический путь из глобального префикса
