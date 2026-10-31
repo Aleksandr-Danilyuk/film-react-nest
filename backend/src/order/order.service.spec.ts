@@ -13,7 +13,6 @@ jest.mock('uuid', () => ({
   v4: () => 'test-uuid',
 }));
 
-
 describe('OrderService', () => {
   let service: OrderService;
   let filmsRepository: FilmsRepository;

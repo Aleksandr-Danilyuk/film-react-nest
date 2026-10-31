@@ -22,12 +22,15 @@ describe('TskvLogger', () => {
     const logged = logSpy.mock.calls[0][0];
     expect(logged).toContain('level=warn');
 
-    const parts = logged.split('\t').map(p => p.trim()).filter(Boolean);
+    const parts = logged
+      .split('\t')
+      .map((p) => p.trim())
+      .filter(Boolean);
     expect(parts).toHaveLength(3); // level, message, optional
 
-    const levelPart = parts.find(p => p.startsWith('level='))!;
-    const messagePart = parts.find(p => p.startsWith('message='))!;
-    const optionalPart = parts.find(p => p.startsWith('optional='))!;
+    const levelPart = parts.find((p) => p.startsWith('level='))!;
+    const messagePart = parts.find((p) => p.startsWith('message='))!;
+    const optionalPart = parts.find((p) => p.startsWith('optional='))!;
 
     const level = levelPart.split('=')[1];
     const messageRaw = messagePart.substring('message='.length);
@@ -47,11 +50,14 @@ describe('TskvLogger', () => {
 
     expect(logSpy).toBeCalledTimes(1);
     const logged = logSpy.mock.calls[0][0];
-    const parts = logged.split('\t').map(p => p.trim()).filter(Boolean);
+    const parts = logged
+      .split('\t')
+      .map((p) => p.trim())
+      .filter(Boolean);
 
     expect(parts).toHaveLength(2); // level, message (без optional)
 
-    const messagePart = parts.find(p => p.startsWith('message='))!;
+    const messagePart = parts.find((p) => p.startsWith('message='))!;
     const messageRaw = messagePart.substring('message='.length);
 
     // Строка остаётся строкой, JSON.stringify даёт "\"Something went wrong\""

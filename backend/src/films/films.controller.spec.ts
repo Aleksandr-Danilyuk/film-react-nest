@@ -74,9 +74,9 @@ describe('FilmsController', () => {
         new NotFoundException('Фильм не найден'),
       );
 
-      await expect(
-        controller.getSchedule(filmId),
-      ).rejects.toThrow(NotFoundException);
+      await expect(controller.getSchedule(filmId)).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 });

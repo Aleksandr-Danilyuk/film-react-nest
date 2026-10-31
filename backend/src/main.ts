@@ -19,7 +19,7 @@ function createLogger(): LoggerService {
 
 async function bootstrap() {
   const logger = createLogger();
-  const app = await NestFactory.create(AppModule, {logger});
+  const app = await NestFactory.create(AppModule, { logger });
   //app.setGlobalPrefix("api/afisha");
   app.setGlobalPrefix('api/afisha', {
     // исключаем статический путь из глобального префикса

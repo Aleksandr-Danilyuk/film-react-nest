@@ -28,9 +28,7 @@ describe('FilmsService', () => {
 
   describe('getFilms', () => {
     it('возвращает { total, items } по данным репозитория', async () => {
-      (filmsRepository.getFilms as jest.Mock).mockResolvedValue(
-        fixtures.films,
-      );
+      (filmsRepository.getFilms as jest.Mock).mockResolvedValue(fixtures.films);
 
       const result = await service.getFilms();
 
@@ -59,11 +57,13 @@ describe('FilmsService', () => {
       const result = await service.getSchedule(filmId);
 
       expect(result.total).toBe(1);
-      expect(result.items[0].id).toBe(
-        '793009d6-030c-4dd4-8d13-9ba500724b38',
-      );
+      expect(result.items[0].id).toBe('793009d6-030c-4dd4-8d13-9ba500724b38');
       expect(result.items[0].taken).toEqual([
-        '3:3', '1:4', '1:5', '1:3', '1:2',
+        '3:3',
+        '1:4',
+        '1:5',
+        '1:3',
+        '1:2',
       ]);
     });
 
