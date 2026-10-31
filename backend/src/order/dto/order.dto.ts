@@ -1,4 +1,3 @@
-//TODO реализовать DTO для /orders
 import {
   IsArray,
   IsEmail,

@@ -1,32 +1,42 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { Film, FilmDocument } from './schemas/film.schema';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Film } from './entities/film.entity';
+import { Schedule } from './entities/schedule.entity';
+
 
 @Injectable()
 export class FilmsRepository {
   constructor(
-    @InjectModel(Film.name) private readonly filmModel: Model<FilmDocument>,
+    @InjectRepository(Film)
+    private readonly filmsRepo: Repository<Film>,
+    @InjectRepository(Schedule)
+    private readonly schedulesRepo: Repository<Schedule>,
   ) {}
 
-  async getFilms(): Promise<FilmDocument[]> {
-    return this.filmModel.find().exec();
+  async getFilms(): Promise<Film[]> {
+    return this.filmsRepo.find();
   }
 
-  async getScheduleByFilm(filmId: string): Promise<FilmDocument | null> {
-    return this.filmModel.findOne({ id: filmId }).exec();
+  async getScheduleByFilm(filmId: string): Promise<Film | null> {
+    return this.filmsRepo.findOne({
+      where: { id: filmId },
+      relations: { schedule: true },
+    });
   }
 
-  async findFilmBySession(sessionId: string): Promise<FilmDocument | null> {
-    return this.filmModel.findOne({ 'schedule.id': sessionId }).exec();
+  async findFilmBySession(sessionId: string): Promise<Film | null> {
+    return this.filmsRepo.findOne({
+      where: { schedule: { id: sessionId } },
+      relations: { schedule: true },
+    });
   }
 
   async addTaken(sessionId: string, row: number, seat: number): Promise<void> {
-    await this.filmModel
-      .updateOne(
-        { 'schedule.id': sessionId },
-        { $push: { 'schedule.$.taken': `${row}:${seat}` } },
-      )
-      .exec();
+    const schedule = await this.schedulesRepo.findOneBy({ id: sessionId });
+    if (!schedule) return;
+
+    schedule.taken.push(`${row}:${seat}`);
+    await this.schedulesRepo.save(schedule);
   }
 }
