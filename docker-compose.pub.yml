@@ -49,7 +49,7 @@ services:
       PORT: 3000
       DEBUG: '*'
       DATABASE_DRIVER: 'postgres'
-      DATABASE_URL: 'postgres://database:5432/${DB_NAME}'
+      DATABASE_URL: 'postgres://${DB_USER}:${DB_PASSWORD}@database:5432/${DB_NAME}'
       DATABASE_USERNAME: ${DB_USER}
       DATABASE_PASSWORD: ${DB_PASSWORD}
     ports:
@@ -60,7 +60,7 @@ services:
       - database
 
   server:
-    image: 'ghcr.io/${OWNER}/sp16_backend:latest'
+    image: 'ghcr.io/${OWNER}/sp16_server:latest'
     build:
       context: nginx
     ports:
