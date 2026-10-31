@@ -1,29 +1,24 @@
+// backend/src/logger/tskv.logger.ts
 import { LoggerService, Injectable } from '@nestjs/common';
 
 @Injectable()
 export class TskvLogger implements LoggerService {
-  private sanitizeJsonString(jsonStr: string): string {
-    return jsonStr.replace(/[\t\n\r]/g, ' ');
+  private serialize(value: any): string {
+    try {
+      return JSON.stringify(value ?? '');
+    } catch {
+      return JSON.stringify(String(value));
+    }
   }
 
   formatMessage(level: string, message: any, ...optionalParams: any[]) {
-    const messageJson = typeof message === 'string' ? message : JSON.stringify(message);
-    const sanitizedMessage = this.sanitizeJsonString(messageJson);
-
     const optional = optionalParams.length
-      ? `optional=${this.sanitizeJsonString(JSON.stringify(optionalParams))}`
+      ? `optional=${this.serialize(optionalParams)}`
       : '';
 
-    const parts = [
-      `level=${level}`,
-      `message=${sanitizedMessage}`,
-    ];
-
-    if (optional) {
-      parts.push(optional);
-    }
-
-    return parts.join('\t');
+    return [`level=${level}`, `message=${this.serialize(message)}`, optional]
+      .filter(Boolean)
+      .join('\t');
   }
 
   log(message: any, ...optionalParams: any[]) {
