@@ -62,9 +62,9 @@ describe('JsonLogger', () => {
     jsonLogger.debug('dbg');
     jsonLogger.verbose('vrb');
 
-    expect(lastLogged(logSpy).level).toBe('debug');
-    expect(lastLogged(logSpy).level).toBe('verbose');
     expect(logSpy).toBeCalledTimes(2);
+    expect(JSON.parse(logSpy.mock.calls[0][0]).level).toBe('debug');
+    expect(JSON.parse(logSpy.mock.calls[1][0]).level).toBe('verbose');
   });
 
   it('сохраняет табуляцию и перевод строки внутри message', () => {
