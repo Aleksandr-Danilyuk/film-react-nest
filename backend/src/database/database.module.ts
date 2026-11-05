@@ -11,14 +11,13 @@ import { Schedule } from '../films/entities/schedule.entity';
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
         url: configService.get<string>('DATABASE_URL'),
-        username: configService.get<string>('DATABASE_USERNAME'),
-        password: configService.get<string>('DATABASE_PASSWORD'),
         entities: [Film, Schedule],
-        synchronize: false, // схему создали через prac.init.sql
+        synchronize: false,
+        logging: ['error'], // полезно: будут логироваться только ошибки SQL
       }),
     }),
     TypeOrmModule.forFeature([Film, Schedule]),
   ],
-  exports: [TypeOrmModule.forFeature([Film, Schedule])],
+  exports: [TypeOrmModule], // <-- вот это исправлено
 })
 export class DatabaseModule {}

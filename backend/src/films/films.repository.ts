@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { Film } from './entities/film.entity';
 import { Schedule } from './entities/schedule.entity';
 
-
 @Injectable()
 export class FilmsRepository {
   constructor(
