@@ -12,7 +12,8 @@ describe('JsonLogger', () => {
     logSpy.mockRestore();
   });
 
-  const lastLogged = (spy: jest.SpyInstance) => JSON.parse(spy.mock.calls.at(-1)![0]);
+  const lastLogged = (spy: jest.SpyInstance) =>
+    JSON.parse(spy.mock.calls.at(-1)![0]);
 
   it('warn: пишет одну JSON-запись с параметрами', () => {
     jsonLogger.warn('hello', { a: 'b', c: 1 });

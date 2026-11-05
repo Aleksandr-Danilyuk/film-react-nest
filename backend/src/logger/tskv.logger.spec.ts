@@ -28,8 +28,12 @@ describe('TskvLogger', () => {
     expect(parts).toHaveLength(3); // level, message, optional
 
     const level = parts.find((p) => p.startsWith('level='))!.split('=')[1];
-    const messageRaw = parts.find((p) => p.startsWith('message='))!.substring('message='.length);
-    const optionalRaw = parts.find((p) => p.startsWith('optional='))!.substring('optional='.length);
+    const messageRaw = parts
+      .find((p) => p.startsWith('message='))!
+      .substring('message='.length);
+    const optionalRaw = parts
+      .find((p) => p.startsWith('optional='))!
+      .substring('optional='.length);
 
     expect(level).toBe('warn');
     expect(JSON.parse(messageRaw)).toEqual({ a: 'b', c: 1 });
@@ -43,7 +47,9 @@ describe('TskvLogger', () => {
     const parts = parseTskv(logSpy.mock.calls[0][0]);
     expect(parts).toHaveLength(2);
 
-    const messageRaw = parts.find((p) => p.startsWith('message='))!.substring('message='.length);
+    const messageRaw = parts
+      .find((p) => p.startsWith('message='))!
+      .substring('message='.length);
     expect(JSON.parse(messageRaw)).toBe('Something went wrong');
   });
 
@@ -51,7 +57,9 @@ describe('TskvLogger', () => {
     tskvLogger.log('start', 1, 'two', { three: 3 });
 
     const parts = parseTskv(logSpy.mock.calls[0][0]);
-    const optionalRaw = parts.find((p) => p.startsWith('optional='))!.substring('optional='.length);
+    const optionalRaw = parts
+      .find((p) => p.startsWith('optional='))!
+      .substring('optional='.length);
     expect(JSON.parse(optionalRaw)).toEqual([1, 'two', { three: 3 }]);
   });
 
@@ -68,8 +76,12 @@ describe('TskvLogger', () => {
     tskvLogger.verbose('v');
 
     expect(logSpy.mock.calls).toHaveLength(2);
-    expect(parseTskv(logSpy.mock.calls[0][0]).find((p) => p.startsWith('level='))).toBe('level=debug');
-    expect(parseTskv(logSpy.mock.calls[1][0]).find((p) => p.startsWith('level='))).toBe('level=verbose');
+    expect(
+      parseTskv(logSpy.mock.calls[0][0]).find((p) => p.startsWith('level=')),
+    ).toBe('level=debug');
+    expect(
+      parseTskv(logSpy.mock.calls[1][0]).find((p) => p.startsWith('level=')),
+    ).toBe('level=verbose');
   });
 
   it('табуляция и перевод строки в message не ломают TSKV-формат', () => {
@@ -78,7 +90,9 @@ describe('TskvLogger', () => {
     const parts = parseTskv(logSpy.mock.calls[0][0]);
     // JSON.stringify экранирует \t и \n, поэтому запись не распадается
     expect(parts).toHaveLength(2);
-    const messageRaw = parts.find((p) => p.startsWith('message='))!.substring('message='.length);
+    const messageRaw = parts
+      .find((p) => p.startsWith('message='))!
+      .substring('message='.length);
     expect(JSON.parse(messageRaw)).toBe('line1\nline2\tend');
   });
 });
