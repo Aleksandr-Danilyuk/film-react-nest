@@ -1,6 +1,7 @@
 services:
   database:
     image: postgres:16.4
+    restart: on-failure
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -32,6 +33,7 @@ services:
 
   frontend:
     image: 'ghcr.io/${OWNER}/sp16_frontend:latest'
+    restart: on-failure
     build:
       context: frontend
     environment:
@@ -43,6 +45,7 @@ services:
 
   backend:
     image: 'ghcr.io/${OWNER}/sp16_backend:latest'
+    restart: on-failure
     build:
       context: backend
     environment:
@@ -61,6 +64,7 @@ services:
 
   server:
     image: 'ghcr.io/${OWNER}/sp16_server:latest'
+    restart: on-failure
     build:
       context: nginx
     ports:

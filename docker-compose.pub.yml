@@ -1,6 +1,7 @@
 services:
   database:
     image: postgres:16.4
+    restart: on-failure
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -26,6 +27,7 @@ services:
 
   frontend:
     image: 'ghcr.io/${OWNER}/sp16_frontend:latest'
+    restart: on-failure
     environment:
       VITE_BASE_URL: /
       VITE_API_URL: /api/afisha
@@ -37,6 +39,7 @@ services:
 
   backend:
     image: 'ghcr.io/${OWNER}/sp16_backend:latest'
+    restart: on-failure
     environment:
       PORT: 3000
       DEBUG: ''
@@ -50,6 +53,7 @@ services:
 
   server:
     image: 'ghcr.io/${OWNER}/sp16_server:latest'
+    restart: on-failure
     ports:
       - '80:80'  # Единственный открытый порт
     volumes:
