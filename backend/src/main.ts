@@ -18,8 +18,12 @@ function createLogger(): LoggerService {
 }
 
 async function bootstrap() {
-  const logger = createLogger();
-  const app = await NestFactory.create(AppModule, { logger });
+  // bufferLogs: true — накапливаем стартовые сообщения Nest,
+  // пока не будет установлен выбранный логгер
+  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+
+  app.useLogger(createLogger());
+
   //app.setGlobalPrefix("api/afisha");
   app.setGlobalPrefix('api/afisha', {
     // исключаем статический путь из глобального префикса
