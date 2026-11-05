@@ -36,10 +36,10 @@ services:
     restart: on-failure
     build:
       context: frontend
-    environment:
-      VITE_BASE_URL: /
-      VITE_API_URL: /api/afisha
-      VITE_CDN_URL: /content/afisha
+      args:
+        VITE_BASE_URL: /
+        VITE_API_URL: /api/afisha
+        VITE_CDN_URL: /content/afisha
     volumes:
       - frontend_build:/app/dist
 
@@ -49,12 +49,11 @@ services:
     build:
       context: backend
     environment:
-      PORT: 3000
-      DEBUG: '*'
-      DATABASE_DRIVER: 'postgres'
+      PORT: ${BACKEND_PORT}
+      DEBUG: ${BACKEND_DEBUG}
+      LOGGER: ${BACKEND_LOGGER}
+      DATABASE_DRIVER: postgres
       DATABASE_URL: 'postgres://${DB_USER}:${DB_PASSWORD}@database:5432/${DB_NAME}'
-      DATABASE_USERNAME: ${DB_USER}
-      DATABASE_PASSWORD: ${DB_PASSWORD}
     ports:
       - 3000:3000
     networks:
